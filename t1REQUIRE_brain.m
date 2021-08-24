@@ -20,6 +20,7 @@ function [t1map_require, brainFinal] = t1REQUIRE_brain(T1w, WM, GM, CSF, infoT1)
 %Update 28 May 2021
 %-------------------------------------------------------------------------
 
+tic
 warning off
 sz = size(T1w);
 
@@ -151,8 +152,12 @@ elseif sum(strcmp(infoT1.SeriesDescription, {'3DT1TFE', 'MPRAGE'})) > 0
     catch
         a = 15;
     end
-    TI = 358; %From scanner, min inversion delay
-    trec = 400;
+    try
+        TI = infoT1.InversionTime;
+    catch
+        TI = 358; %From scanner, min inversion delay
+    end
+       trec = 400;
     n = double(n);
     mprage = mprage.*brainFinal;
     
@@ -228,6 +233,9 @@ elseif sum(strcmp(infoT1.SeriesDescription, {'3DT1TFE', 'MPRAGE'})) > 0
     
     
 end
+
+a = toc;
+disp(['***************T1-REQUIRE completed in ' num2str(a) ' seconds***************'])
 end %t1REQUIRE_brain
 
 
